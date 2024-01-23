@@ -1,0 +1,133 @@
+1. D educations*
+2. CRUD employees*
+3. D experiences*
+
+4. C leaves*
+5. R - notifications*
+
+6. login
+7. CUD meetings*
+8. CRUD - Reviews*
+9. search  - tickets and employees*
+10.add skills to employee - skills
+11. stats
+
+Chat feature - DONE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+router.put("/", [auth, isadmin], async (req, res) => {
+  let transaction
+  try {
+    const { employee_id } = req.body
+
+    transaction = await db.transaction({
+      isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
+    })
+
+    const employee = await Employee.findByPk(employee_id)
+
+    if (!employee) {
+      await transaction.rollback()
+      return res.status(400).send("User not found")
+    }
+
+    const meeting_member = await MeetingMember.findOne({
+      where: {
+        employee_id: req.body.employee_id,
+        meeting_id: req.body.meeting_id,
+      },
+    })
+
+    const meeting = await Meeting.findByPk(meeting_member.meeting_id)
+
+    // for reference in meeting
+    const start = moment(meeting.from)
+    const end = moment(meeting.to)
+    const meetingDiff = end.diff(start, "minutes") // Calculate the meeting diff in minutes
+
+    // for reference in meeting_member
+    const startt = moment(meeting_member.from)
+    const endd = moment(meeting_member.to)
+    const meetingDiffMember = endd.diff(startt, "minutes") // Calculate the meeting diff in minutes
+
+    // to add in update
+    const employee_start = moment(req.body.from)
+    const employee_end = moment(req.body.to)
+    const employeeDiff = employee_end.diff(employee_start, "minutes") // Calculate the employee's diff in minutes
+
+    const attendedMeetingPercentile = (100 / meetingDiff) * employeeDiff // Calculate the percentile and round to two decimal places
+    const attendedMeetingPercentileMember =
+      (100 / meetingDiff) * meetingDiffMember // Calculate the percentile and round to two decimal places
+
+    // temp for adding in db
+    // tempp for reference meeting_member
+    const temp = Math.round(attendedMeetingPercentile) / 100
+    const tempp = Math.round(attendedMeetingPercentileMember) / 100
+
+    console.log(`this is fucking`, temp, tempp)
+
+    if (isNaN(tempp) === false) {
+      if (tempp > 1) {
+        return res
+          .status(400)
+          .send("The input has exceeded the meeting fraction.")
+      }
+    }
+
+    await MeetingMember.update(
+      {
+        to: req.body.to,
+        from: req.body.from,
+      },
+      {
+        where: {
+          employee_id: req.body.employee_id,
+          meeting_id: req.body.meeting_id,
+        },
+        transaction,
+      }
+    )
+
+    await Employee.update(
+      {
+        attended_meetings: Sequelize.literal(`attended_meetings + ${temp}`),
+      },
+      {
+        where: {
+          id: employee_id,
+        },
+        transaction,
+      }
+    )
+
+    await transaction.commit()
+    res.redirect("/employees/me")
+  } catch (ex) {
+    if (transaction) {
+      await transaction.rollback()
+    }
+    winston.error(ex)
+    res.status(500).send("Something failed.")
+  }
+}) 
+*/
