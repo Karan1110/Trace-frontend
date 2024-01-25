@@ -26,11 +26,16 @@ import { Bar } from "react-chartjs-2"
 
 const Home = () => {
   const [ticketCounts, setTicketsCount] = useState([])
+  const [tickets, setTickets] = useState([])
   useEffect(() => {
     const fetchTicketCounts = async () => {
       try {
         const response = await axios.get("http://localhost:1111/tickets")
         setTicketsCount(response.data)
+        const response2 = await axios.get(
+          "http://localhost:1111/tickets/latest"
+        )
+        setTickets(response2.data)
       } catch (error) {
         console.error("Error fetching ticket counts:", error)
         return []
@@ -45,182 +50,78 @@ const Home = () => {
         display: true,
         text: "Dashboard",
         font: {
-          size: 16, // Set the font size here
+          size: 25, // Set the font size here
         },
       },
     },
   }
   return (
-    <div className="container  mx-3 p-3">
-      <div className="w-1/2 h-[450px]">
+    <div className="container flex flex-row mx-[120px] ">
+      <div className="w-1/2 h-[450px] mt-10">
+        <div className="grid grid-cols-3  my-5 ">
+          <span className="text-gray-100 font-medium  ">Closed Issues</span>
+          <span className="text-gray-100 font-medium ">Open Issues</span>
+          <span className="text-gray-100 font-medium ">In-progress Issues</span>
+        </div>
+        <div className="grid grid-cols-3  mb-5 space-x-3 ">
+          <span className=" font-medium text-2xl textce-center text-gray-100">
+            {" "}
+            {ticketCounts[0]}{" "}
+          </span>
+          <span className="text-gray-100 text-2xl  font-medium ">
+            {ticketCounts[1]}
+          </span>
+          <span className="text-gray-100 font-medium text-2xl  ">
+            {ticketCounts[2]}
+          </span>
+        </div>
+
         <Bar
           datasetIdKey="id"
           options={options}
-          className="h-full"
+          className=""
           data={{
-            labels: ["Open", "Closed", "In-Progress"],
+            labels: ["Open", "Closed", "In-progress"],
             datasets: [
               {
-                id: 1,
-                label: "Open",
-                data: [7, 5, 6],
-                backgroundColor: "rgba(191, 128, 255, 0.5)", // Specify the color for "Open"
+                label: "Open", // Make sure the label matches the labels array
+                data: ticketCounts,
+                backgroundColor: "rgba(191, 128, 255, 0.5)",
                 borderWidth: 2,
-                barThickness: 80,
+                barThickness: 70,
               },
             ],
           }}
         />
       </div>
 
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4">Ticket Counts</h3>
-        <div className="flex justify-between">
-          <div className="text-center">
-            <p className="text-xl font-bold text-green-600">
-              {ticketCounts[0]}
-            </p>
-            <p className="text-gray-600">Open Issues</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xl font-bold text-red-600">{ticketCounts[1]}</p>
-            <p className="text-gray-600">Closed Issues</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xl font-bold text-yellow-600">
-              {ticketCounts[2]}
-            </p>
-            <p className="text-gray-600">In Progress Issues</p>
-          </div>
-        </div>
-      </div>
-      <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-            Latest Customers
+      <div className="w-full absolute my-5 right-5 max-w-md p-4 bg-white  shadow sm:p-8 dark:bg-gray-800 ">
+        <div className="flow-root relative top-0 right-60 w-96 h-auto">
+          <h5 className="text-xl font-bold  mb-5 leading-none text-gray-900 dark:text-white">
+            Latest Issues
           </h5>
-          <a
-            href="#"
-            className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-          >
-            View all
-          </a>
-        </div>
-        <div className="flow-root">
-          <ul
-            role="list"
-            className="divide-y divide-gray-200 dark:divide-gray-700"
-          >
-            <li className="py-3 sm:py-4">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
+          <ul role="list" className="h-96">
+            {tickets.map((ticket, index) => (
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0"></div>
+                  <div className="flex-1 min-w-0 ms-4">
+                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                      Pagination not working...
+                    </p>
+                    <div className=" block  text-[13px] bg-red-100 font-medium mt-2 mb-3 py-1 pr-0 pl-3 w-[55px] rounded text-red-800">
+                      open
+                    </div>
+                  </div>
+
                   <img
-                    className="w-8 h-8 rounded-full"
-                    src="/docs/images/people/profile-picture-1.jpg"
+                    className="w-8 h-8 mb-5 rounded-full object-cover"
+                    src="../../public/pic.jpg"
                     alt="Neil image"
                   />
                 </div>
-                <div className="flex-1 min-w-0 ms-4">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                    Neil Sims
-                  </p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                    email@windster.com
-                  </p>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  $320
-                </div>
-              </div>
-            </li>
-            <li className="py-3 sm:py-4">
-              <div className="flex items-center ">
-                <div className="flex-shrink-0">
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src="/docs/images/people/profile-picture-3.jpg"
-                    alt="Bonnie image"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 ms-4">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                    Bonnie Green
-                  </p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                    email@windster.com
-                  </p>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  $3467
-                </div>
-              </div>
-            </li>
-            <li className="py-3 sm:py-4">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src="/docs/images/people/profile-picture-2.jpg"
-                    alt="Michael image"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 ms-4">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                    Michael Gough
-                  </p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                    email@windster.com
-                  </p>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  $67
-                </div>
-              </div>
-            </li>
-            <li className="py-3 sm:py-4">
-              <div className="flex items-center ">
-                <div className="flex-shrink-0">
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src="/docs/images/people/profile-picture-4.jpg"
-                    alt="Lana image"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 ms-4">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                    Lana Byrd
-                  </p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                    email@windster.com
-                  </p>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  $367
-                </div>
-              </div>
-            </li>
-            <li className="pt-3 pb-0 sm:pt-4">
-              <div className="flex items-center ">
-                <div className="flex-shrink-0">
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src="/docs/images/people/profile-picture-5.jpg"
-                    alt="Thomas image"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 ms-4">
-                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                    Thomes Lean
-                  </p>
-                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                    email@windster.com
-                  </p>
-                </div>
-                <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  $2367
-                </div>
-              </div>
-            </li>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

@@ -37,7 +37,7 @@ const PerformanceModal = ({ onClose, employeeId }) => {
 
       // API call to update employee with performance_id
       await axios.put(
-        `http://localhost:1111/employees/property/${formData.employee_id}`,
+        `http://localhost:1111/users/property/${formData.employee_id}`,
         {
           propertyValue: performanceId,
         },
@@ -129,7 +129,7 @@ const PerformanceModal = ({ onClose, employeeId }) => {
 }
 
 const Profile = () => {
-  const [employee, setEmployee] = useState(null)
+  const [employee, setUser] = useState(null)
   const [isOpen, setIsOpen] = useState(false)
   const [isPerformanceModalOpen, setIsPerformanceModalOpen] = useState(false)
 
@@ -189,18 +189,18 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    const fetchEmployee = async () => {
+    const fetchUser = async () => {
       try {
         const employee_id = localStorage.getItem("employee_id")
 
         const response = await axios.get(
-          `http://localhost:1111/employees/${employee_id}`,
+          `http://localhost:1111/users/${employee_id}`,
           {
             headers: { "x-auth-token": localStorage.getItem("token") },
           }
         )
 
-        setEmployee(response.data)
+        setUser(response.data)
         toast.success("fetched the employee...")
       } catch (error) {
         toast("could not fetch the employee")
@@ -208,7 +208,7 @@ const Profile = () => {
       }
     }
 
-    fetchEmployee()
+    fetchUser()
   }, [])
 
   return (

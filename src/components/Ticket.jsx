@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom"
 
 const TicketDetails = () => {
   const [ticket, setTicket] = useState(null)
-  const [employees, setEmployees] = useState([])
-  const [selectedEmployee, setSelectedEmployee] = useState("")
+  const [users, setUsers] = useState([])
+  const [selectedUser, setSelectedUser] = useState("")
   const { id } = useParams()
 
   useEffect(() => {
@@ -20,22 +20,22 @@ const TicketDetails = () => {
       }
     }
 
-    // Fetch list of employees
-    const fetchEmployees = async () => {
+    // Fetch list of users
+    const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:1111/employees", {
+        const response = await axios.get("http://localhost:1111/users", {
           headers: {
             "x-auth-token": localStorage.getItem("token"),
           },
         })
-        setEmployees(response.data)
+        setUsers(response.data)
       } catch (error) {
-        console.error("Error fetching employees:", error)
+        console.error("Error fetching users:", error)
       }
     }
 
     fetchTicket()
-    fetchEmployees()
+    fetchUsers()
   }, [id])
 
   const handleAssign = async () => {
@@ -44,7 +44,7 @@ const TicketDetails = () => {
       await axios.put(
         `http://localhost:1111/tickets/assign/${id}`,
         {
-          employee_id: selectedEmployee,
+          employee_id: selectedUser,
         },
         {
           headers: {
@@ -73,8 +73,8 @@ const TicketDetails = () => {
             <strong>Ticket Name:</strong> {ticket.name}
           </div>
           <div className="mb-4">
-            <strong>Employee:</strong>{" "}
-            {ticket.Employee ? ticket.Employee.name : "Not Assigned"}
+            <strong>User:</strong>{" "}
+            {ticket.User ? ticket.User.name : "Not Assigned"}
           </div>
 
           <video class="w-[250px] h-[250px] mx-auto" controls>
@@ -83,17 +83,17 @@ const TicketDetails = () => {
           </video>
           <div className="mt-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Assign to Employee:
+              Assign to User:
             </label>
             <select
               className="w-full bg-white border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:border-blue-300"
-              value={selectedEmployee}
-              onChange={(e) => setSelectedEmployee(e.target.value)}
+              value={selectedUser}
+              onChange={(e) => setSelectedUser(e.target.value)}
             >
               <option value="" disabled>
                 Select an employee
               </option>
-              {employees.map((employee) => (
+              {users.map((employee) => (
                 <option key={employee.id} value={employee.id}>
                   {employee.name}
                 </option>

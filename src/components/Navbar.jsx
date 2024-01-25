@@ -4,23 +4,21 @@ import React, { useEffect, useState } from "react"
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
-  const [employee, setEmployee] = useState(false)
+  const [employee, setUser] = useState(false)
 
   useEffect(() => {
-    const fetchEmployee = async () => {
+    const fetchUser = async () => {
       const response = await axios.get(
-        `http://localhost:1111/employees/${localStorage.getItem(
-          "employee_id"
-        )}`,
+        `http://localhost:1111/users/${localStorage.getItem("employee_id")}`,
         {
           headers: {
             "x-auth-token": localStorage.getItem("token"),
           },
         }
       )
-      setEmployee(response.data)
+      setUser(response.data)
     }
-    fetchEmployee()
+    fetchUser()
   }, [])
 
   return (
@@ -60,9 +58,10 @@ const Navbar = () => {
             href="#"
           >
             <img
-              src="https://tecdn.b-cdn.net/img/logo/te-transparent-noshadows.webp"
-              style={{ height: "15px" }}
+              src="../../public/logo.webp"
+              style={{ height: "30px" }}
               alt="TE Logo"
+              className="dark:text-white "
               loading="lazy"
             />
           </a>
@@ -163,11 +162,7 @@ const Navbar = () => {
             )}
           </div>
           {/* Second dropdown container */}
-          <div
-            className="relative"
-            data-te-dropdown-ref
-            data-te-dropdown-alignment="end"
-          >
+          <div className="relative">
             {/* Second dropdown trigger */}
             <a
               className="hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none"

@@ -1,18 +1,18 @@
-1. D educations*
-2. CRUD employees*
-3. D experiences*
+1.  REMOVE education
+2.  UPDATE and DELETE users
+3.  REMOVE experiences
+4.  ADD leaves for an user
+5.  READ leaderboards
+6.  READ the current user's pending tickets in home page
+7.  login
+8.  UPDATE and DELETE meetings*
+9.  READ, ADD and REMOVE - Reviews*
+10. SEARCH  - tickets and users based on all properties*
+11. ADD skills to an user - skills
+12. READ statistics
 
-4. C leaves*
-5. R - notifications*
 
-6. login
-7. CUD meetings*
-8. CRUD - Reviews*
-9. search  - tickets and employees*
-10.add skills to employee - skills
-11. stats
 
-Chat feature - DONE
 
 
 
@@ -38,22 +38,22 @@ Chat feature - DONE
 router.put("/", [auth, isadmin], async (req, res) => {
   let transaction
   try {
-    const { employee_id } = req.body
+    const { user_id } = req.body
 
     transaction = await db.transaction({
       isolationLevel: Sequelize.Transaction.ISOLATION_LEVELS.SERIALIZABLE,
     })
 
-    const employee = await Employee.findByPk(employee_id)
+    const user = await user.findByPk(user_id)
 
-    if (!employee) {
+    if (!user) {
       await transaction.rollback()
       return res.status(400).send("User not found")
     }
 
     const meeting_member = await MeetingMember.findOne({
       where: {
-        employee_id: req.body.employee_id,
+        user_id: req.body.user_id,
         meeting_id: req.body.meeting_id,
       },
     })
@@ -71,11 +71,11 @@ router.put("/", [auth, isadmin], async (req, res) => {
     const meetingDiffMember = endd.diff(startt, "minutes") // Calculate the meeting diff in minutes
 
     // to add in update
-    const employee_start = moment(req.body.from)
-    const employee_end = moment(req.body.to)
-    const employeeDiff = employee_end.diff(employee_start, "minutes") // Calculate the employee's diff in minutes
+    const user_start = moment(req.body.from)
+    const user_end = moment(req.body.to)
+    const userDiff = user_end.diff(user_start, "minutes") // Calculate the user's diff in minutes
 
-    const attendedMeetingPercentile = (100 / meetingDiff) * employeeDiff // Calculate the percentile and round to two decimal places
+    const attendedMeetingPercentile = (100 / meetingDiff) * userDiff // Calculate the percentile and round to two decimal places
     const attendedMeetingPercentileMember =
       (100 / meetingDiff) * meetingDiffMember // Calculate the percentile and round to two decimal places
 
@@ -101,27 +101,27 @@ router.put("/", [auth, isadmin], async (req, res) => {
       },
       {
         where: {
-          employee_id: req.body.employee_id,
+          user_id: req.body.user_id,
           meeting_id: req.body.meeting_id,
         },
         transaction,
       }
     )
 
-    await Employee.update(
+    await user.update(
       {
         attended_meetings: Sequelize.literal(`attended_meetings + ${temp}`),
       },
       {
         where: {
-          id: employee_id,
+          id: user_id,
         },
         transaction,
       }
     )
 
     await transaction.commit()
-    res.redirect("/employees/me")
+    res.redirect("/users/me")
   } catch (ex) {
     if (transaction) {
       await transaction.rollback()

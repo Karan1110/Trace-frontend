@@ -8,7 +8,7 @@ import { useParams } from "react-router-dom"
 const EditTicket = () => {
   const editor = useRef(null)
   const { id } = useParams()
-  const [employees, setEmployees] = useState([])
+  const [users, setUsers] = useState([])
   const [formData, setFormData] = useState({
     name: "",
     body: "",
@@ -17,19 +17,19 @@ const EditTicket = () => {
   })
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchUsers = async () => {
       try {
         const authToken = localStorage.getItem("token")
-        const response = await axios.get("http://localhost:1111/employees", {
+        const response = await axios.get("http://localhost:1111/users", {
           headers: {
             "x-auth-token": authToken,
           },
         })
 
-        setEmployees(response.data)
+        setUsers(response.data)
       } catch (error) {
-        toast.error("Error fetching employees: " + error.message)
-        console.error("Error fetching employees:", error)
+        toast.error("Error fetching users: " + error.message)
+        console.error("Error fetching users:", error)
       }
     }
 
@@ -58,7 +58,7 @@ const EditTicket = () => {
       }
     }
 
-    fetchEmployees()
+    fetchUsers()
     fetchTicketDetails()
   }, [id])
 

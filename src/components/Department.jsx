@@ -1,10 +1,9 @@
-// DepartmentForm.js
-
 import React, { useState } from "react"
 import axios from "axios"
 import { toast } from "react-hot-toast"
+import { TextField, TextFieldInput } from "@radix-ui/themes"
 
-const DepartmentForm = () => {
+const Department = () => {
   const [name, setName] = useState("")
 
   const handleSubmit = async (e) => {
@@ -38,7 +37,7 @@ const DepartmentForm = () => {
           >
             Department Name
           </label>
-          <input
+          <TextField.Input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="name"
             type="text"
@@ -60,4 +59,4 @@ const DepartmentForm = () => {
   )
 }
 
-export default DepartmentForm
+export default Department

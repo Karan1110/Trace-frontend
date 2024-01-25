@@ -1,9 +1,8 @@
-// SignUpForm.js
-
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { useHotkeys } from "react-hotkeys-hook"
 import toast from "react-hot-toast"
+import { Button, TextField, DropdownMenu } from "@radix-ui/themes"
 
 const SignUp = () => {
   const [name, setName] = useState("")
@@ -15,33 +14,20 @@ const SignUp = () => {
   const [isAdmin, setIsAdmin] = useState(false)
   const [departmentId, setDepartmentId] = useState("")
   const [totalWorkingDays, setTotalWorkingDays] = useState("")
-  const [totalWorkingHours, setTotalWorkingHours] = useState("")
-  const [salaryPerHour, setSalaryPerHour] = useState("")
-
   const [departmentSuggestions, setDepartmentSuggestions] = useState([])
-  const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false)
-
-  const handleDepartmentChange = async (value) => {
-    try {
-      setIsFetchingSuggestions(true)
-      if (value !== "") {
-        const response = await axios.get("http://localhost:1111/departments", {
-          params: { department: value },
-        })
-        setDepartmentSuggestions(response.data)
-      }
-    } catch (error) {
-      console.error("Error fetching department suggestions:", error)
-    } finally {
-      setIsFetchingSuggestions(false)
-    }
-  }
+  const [department, setDepartment] = useState("none")
 
   const handleDepartmentSelect = (selectedDepartment) => {
     setDepartmentId(selectedDepartment.id)
-    console.log(selectedDepartment.id)
-    setDepartmentSuggestions([])
+    setDepartment(selectedDepartment.name)
   }
+  useEffect(() => {
+    async function fetchDepartments() {
+      const response = await axios.get("http://localhost:1111/departments")
+      setDepartmentSuggestions(response.data)
+    }
+    fetchDepartments()
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -52,7 +38,7 @@ const SignUp = () => {
           "the password should be the same as your confirmed password.."
         )
       }
-      const response = await axios.post("http://localhost:1111/employees", {
+      const response = await axios.post("http://localhost:1111/users", {
         name,
         email,
         password,
@@ -61,14 +47,12 @@ const SignUp = () => {
         isadmin: isAdmin,
         department_id: departmentId,
         total_working_days: totalWorkingDays,
-        total_working_hours: totalWorkingHours,
-        salary_per_hour: salaryPerHour,
       })
 
       toast.success("Sign-up successful!")
-      localStorage.setItem("employee_id", response.data.Employee.id)
+      localStorage.setItem("employee_id", response.data.User.id)
       localStorage.setItem("token", response.data.token)
-      console.log("Employee created:", response.data)
+      console.log("User created:", response.data)
 
       // Reset the form after successful submission
       setName("")
@@ -80,20 +64,11 @@ const SignUp = () => {
       setIsAdmin(false)
       setDepartmentId("")
       setTotalWorkingDays("")
-      setTotalWorkingHours("")
-      setSalaryPerHour("")
     } catch (error) {
       toast.error("Error signing up. Please try again.")
       console.error("Error creating employee:", error)
     }
   }
-
-  //   // Fetch department suggestions on department input change
-  //   useEffect(() => {
-  //     if (departmentId === "") {
-  //       handleDepartmentChange("")
-  //     }
-  //   }, [departmentId])
 
   // Clear suggestions when department input is empty
   useHotkeys("backspace", () => {
@@ -103,7 +78,7 @@ const SignUp = () => {
   })
 
   return (
-    <div className="max-w-md mx-auto mt-[75px] h-100">
+    <div className="max-w-xl mx-auto mt-[40px] h-100">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -115,66 +90,36 @@ const SignUp = () => {
           >
             Name
           </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="name"
-            type="text"
-            name="name"
-            placeholder="Enter your name"
+          <TextField.Input
+            size="3"
+            placeholder="Whats your name?"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        {/* Other input fields */}
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="salaryPerHour"
-          >
-            Salary Per Hour
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="salaryPerHour"
-            type="number"
-            name="salaryPerHour"
-            placeholder="Enter salary per hour"
-            value={salaryPerHour}
-            onChange={(e) => setSalaryPerHour(e.target.value)}
-          />
-        </div>
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="department"
+            htmlFor="name"
           >
             Department
           </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="department"
-            type="text"
-            placeholder="Enter department name"
-            onChange={(e) => handleDepartmentChange(e.target.value)}
-          />
-          {isFetchingSuggestions && (
-            <p className="text-sm text-gray-500 mt-1">
-              Fetching suggestions...
-            </p>
-          )}
-          {departmentSuggestions.length > 0 && (
-            <ul className="mt-2">
-              {departmentSuggestions.map((department) => (
-                <li
-                  key={department.id}
-                  className="cursor-pointer text-blue-500 hover:text-blue-700"
-                  onClick={() => handleDepartmentSelect(department)}
-                >
-                  {department.name}
-                </li>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger>
+              <Button variant="soft">{department}</Button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Content size="2">
+              {departmentSuggestions.map((d) => (
+                <DropdownMenu.Item onClick={() => handleDepartmentSelect(d)}>
+                  {" "}
+                  {d.name}
+                </DropdownMenu.Item>
               ))}
-            </ul>
-          )}
+              <DropdownMenu.Separator />
+
+              <DropdownMenu.Item>None</DropdownMenu.Item>
+            </DropdownMenu.Content>
+          </DropdownMenu.Root>
         </div>
         <div className="mb-4">
           <label
@@ -183,7 +128,8 @@ const SignUp = () => {
           >
             Email
           </label>
-          <input
+          <TextField.Input
+            size="3"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="email"
             type="email"
@@ -201,7 +147,8 @@ const SignUp = () => {
           >
             Password
           </label>
-          <input
+          <TextField.Input
+            size="3"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="password"
             type="password"
@@ -219,7 +166,8 @@ const SignUp = () => {
           >
             Confirm Password
           </label>
-          <input
+          <TextField.Input
+            size="3"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="confirmPassword"
             type="password"
@@ -237,7 +185,8 @@ const SignUp = () => {
           >
             Salary
           </label>
-          <input
+          <TextField.Input
+            size="3"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="salary"
             type="number"
@@ -255,7 +204,8 @@ const SignUp = () => {
           >
             Age
           </label>
-          <input
+          <TextField.Input
+            size="3"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="age"
             type="number"
@@ -269,28 +219,12 @@ const SignUp = () => {
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="isAdmin"
-          >
-            Is Admin
-          </label>
-          <input
-            className="form-checkbox h-5 w-5 text-blue-600"
-            id="isAdmin"
-            type="checkbox"
-            name="isAdmin"
-            checked={isAdmin}
-            onChange={() => setIsAdmin(!isAdmin)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="totalWorkingDays"
           >
             Total Working Days
           </label>
-          <input
+          <TextField.Input
+            size="3"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="totalWorkingDays"
             type="number"
@@ -300,30 +234,11 @@ const SignUp = () => {
             onChange={(e) => setTotalWorkingDays(e.target.value)}
           />
         </div>
-
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="totalWorkingHours"
-          >
-            Total Working Hours
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="totalWorkingHours"
-            type="number"
-            name="totalWorkingHours"
-            placeholder="Enter total working hours"
-            value={totalWorkingHours}
-            onChange={(e) => setTotalWorkingHours(e.target.value)}
-          />
+        <div className="cursor-pointer">
+          <Button variant="solid" type="submit">
+            sign up
+          </Button>
         </div>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          type="submit"
-        >
-          create
-        </button>
       </form>
     </div>
   )
