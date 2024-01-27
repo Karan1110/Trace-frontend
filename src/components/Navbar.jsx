@@ -1,10 +1,22 @@
+import {
+  Text,
+  TextField,
+  Popover,
+  Box,
+  Flex,
+  Button,
+  Avatar,
+  Heading,
+  ScrollArea,
+} from "@radix-ui/themes"
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
-  const [employee, setUser] = useState(false)
+  const [user, setUser] = useState(false)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -22,7 +34,7 @@ const Navbar = () => {
   }, [])
 
   return (
-    <nav className=" border-b border-gray-100 flex-no-wrap relative flex w-full items-center justify-between bg-[#FBFBFB] py-2 shadow-md shadow-black/5 dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-4">
+    <nav className=" border-b border-gray-200 flex-no-wrap relative flex w-full items-center justify-between  py-2 pl-60  dark:bg-neutral-600 dark:shadow-black/10 lg:flex-wrap lg:justify-start lg:py-4">
       <div className="flex w-full flex-wrap items-center justify-between px-3">
         {/* Hamburger button for mobile view */}
         <button
@@ -30,12 +42,12 @@ const Navbar = () => {
           type="button"
         >
           {/* Hamburger icon */}
-          <span className="[&>svg]:w-7">
+          <span className="[&>svg]:w-7 h-5">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="h-7 w-7"
+              className="h-5 w-7"
             >
               <path
                 fillRule="evenodd"
@@ -59,146 +71,125 @@ const Navbar = () => {
           >
             <img
               src="../../public/logo.webp"
-              style={{ height: "30px" }}
+              style={{ height: "25px" }}
               alt="TE Logo"
               className="dark:text-white "
               loading="lazy"
             />
           </a>
           {/* Left navigation links */}
-          <ul
-            className="list-style-none mr-auto flex flex-col pl-0 lg:flex-row"
-            data-te-navbar-nav-ref
-          >
-            <li className="mb-4 lg:mb-0 lg:pr-2" data-te-nav-item-ref>
-              {/* Dashboard link */}
-              <a
-                className="text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-zinc-400"
-                href="#"
-                data-te-nav-link-ref
-              >
-                Dashboard
-              </a>
-            </li>
-            {/* Team link */}
-            <li className="mb-4 lg:mb-0 lg:pr-2" data-te-nav-item-ref>
-              <a
-                className="text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                href="#"
-                data-te-nav-link-ref
-              >
-                Team
-              </a>
-            </li>
-            {/* Projects link */}
-            <li className="mb-4 lg:mb-0 lg:pr-2" data-te-nav-item-ref>
-              <a
-                className="text-neutral-500 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-                href="#"
-                data-te-nav-link-ref
-              >
-                Projects
-              </a>
-            </li>
-          </ul>
+          <div className=" flex flex-col  space-x-7 lg:flex-row">
+            <Text weight="regular" className="cursor-pointer hover:scale-95">
+              Dashboard
+            </Text>
+            <Text weight="regular" className="cursor-pointer hover:scale-95">
+              Team
+            </Text>
+            <Text weight="regular" className="cursor-pointer hover:scale-95">
+              Projects
+            </Text>
+          </div>
         </div>
 
         {/* Right elements */}
-        <div className="relative flex items-center">
-          {/* Container with two dropdown menus */}
+        <div className="relative flex mr-60 items-center">
+          <div className="mr-10">
+            <TextField.Root>
+              <TextField.Slot>
+                <MagnifyingGlassIcon height="20" width="25" />
+              </TextField.Slot>
+              <TextField.Input
+                placeholder="Search users "
+                color="purple"
+                size="2"
+                width="50"
+              />
+            </TextField.Root>
+          </div>
           <div
             className="relative"
             data-te-dropdown-ref
             data-te-dropdown-alignment="end"
           >
             {/* First dropdown trigger */}
-            <a
-              className="hidden-arrow mr-10 flex items-center text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
-              onClick={() => {
-                setShowNotifications(!showNotifications)
-              }}
-              id="dropdownMenuButton1"
-              role="button"
-            >
-              {/* Dropdown trigger icon */}
-              <span className="[&>svg]:w-5">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-5 w-5"
+
+            <Popover.Root>
+              <Popover.Trigger>
+                <a
+                  className="hidden-arrow mr-10 flex items-center text-neutral-600 transition duration-200 hover:text-neutral-700 hover:ease-in-out focus:text-neutral-700 disabled:text-black/30 motion-reduce:transition-none dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
+                  onClick={() => {
+                    setShowNotifications(!showNotifications)
+                  }}
+                  id="dropdownMenuButton1"
+                  role="button"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
-              {/* Notification counter */}
-              <span className="absolute -mt-4 ml-2.5 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white">
-                1
-              </span>
-            </a>
-            {/* First dropdown menu */}
-            {showNotifications && (
-              <ul className="absolute z-[1000] float-left m-0 right-5 border border-gray-100 min-w-max list-none overflow-hidden rounded-lg bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block">
-                {employee.Notifications ? (
-                  employee.Notifications.map((notification, index) => (
-                    <li key={index}>
-                      <a className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30">
-                        {notification.message}
-                      </a>
-                    </li>
-                  ))
-                ) : (
-                  <li>
-                    <a className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30">
-                      No notifications found...
-                    </a>
-                  </li>
-                )}
-              </ul>
-            )}
+                  {/* Dropdown trigger icon */}
+                  <span className="[&>svg]:w-5">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      className="h-5 w-5"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </Popover.Trigger>
+              <Popover.Content style={{ width: 350 }}>
+                <ScrollArea
+                  type="always"
+                  scrollbars="vertical"
+                  style={{ height: 180 }}
+                >
+                  <Box p="2" pr="8">
+                    <Heading size="4" mb="2" trim="start">
+                      Notifications
+                    </Heading>
+                    <hr />
+                    <Flex mt="4" direction="column" gap="4">
+                      {user.Notifications ? (
+                        user.Notifications.map((n) => (
+                          <Text as="p">{n.message}</Text>
+                        ))
+                      ) : (
+                        <Text as="p">No notifications retrieved!</Text>
+                      )}
+                    </Flex>
+                  </Box>
+                </ScrollArea>
+              </Popover.Content>
+            </Popover.Root>
           </div>
           {/* Second dropdown container */}
           <div className="relative">
-            {/* Second dropdown trigger */}
-            <a
-              className="hidden-arrow flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none"
-              onClick={() => {
-                setShowProfile(!showProfile)
-              }}
-              role="button"
-            >
-              <img
-                src="https://tecdn.b-cdn.net/img/new/avatars/2.jpg"
-                className="rounded-full"
-                style={{ height: "25px", width: "25px" }}
-                alt=""
-                loading="lazy"
-              />
-            </a>
-            {/* Second dropdown menu */}
-            {showProfile && (
-              <ul
-                className="absolute right-0 z-[1000] float-left m-0  min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
-                aria-labelledby="dropdownMenuButton2"
-                data-te-dropdown-menu-ref
-              >
-                {/* Second dropdown menu items */}
-                <li>
-                  <a className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30">
-                    {employee.email}
-                  </a>
-                </li>
-                <li>
-                  <a className="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-white/30">
-                    Log out
-                  </a>
-                </li>
-              </ul>
-            )}
+            <Popover.Root>
+              <Popover.Trigger>
+                <div>
+                  <Avatar fallback="A" size="2" className="cursor-pointer" />
+                </div>
+              </Popover.Trigger>
+              <Popover.Content style={{ width: 250 }}>
+                <Flex gap="3">
+                  <Box grow="1">
+                    <Flex gap="2" direction="column" justify="between">
+                      <Text weight="regular" size="2">
+                        {user.email}
+                      </Text>
+                      <Popover.Close>
+                        <Button size="1" color="purple">
+                          Log out
+                        </Button>
+                      </Popover.Close>
+                    </Flex>
+                  </Box>
+                </Flex>
+              </Popover.Content>
+            </Popover.Root>
           </div>
         </div>
       </div>

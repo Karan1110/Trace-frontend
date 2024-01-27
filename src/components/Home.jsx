@@ -23,6 +23,8 @@ Chart.register(
   BarElement
 )
 import { Bar } from "react-chartjs-2"
+import { Table, Badge, Avatar, Text } from "@radix-ui/themes"
+import { Link } from "react-router-dom"
 
 const Home = () => {
   const [ticketCounts, setTicketsCount] = useState([])
@@ -56,26 +58,25 @@ const Home = () => {
     },
   }
   return (
-    <div className="container flex flex-row mx-[120px] ">
-      <div className="w-1/2 h-[450px] mt-10">
-        <div className="grid grid-cols-3  my-5 ">
-          <span className="text-gray-100 font-medium  ">Closed Issues</span>
-          <span className="text-gray-100 font-medium ">Open Issues</span>
-          <span className="text-gray-100 font-medium ">In-progress Issues</span>
+    <div className="container flex flex-row ml-[50px] mr-[40px] ">
+      <div className="w-1/2 h-[450px] mt-10  ">
+        <div className="grid grid-cols-3  my-5  ">
+          <span className="text-gray-900 font-medium  ">Closed Issues</span>
+          <span className="text-gray-900 font-medium ">Open Issues</span>
+          <span className="text-gray-900 font-medium ">In-progress Issues</span>
         </div>
         <div className="grid grid-cols-3  mb-5 space-x-3 ">
-          <span className=" font-medium text-2xl textce-center text-gray-100">
+          <span className=" font-medium text-2xl textce-center text-gray-900">
             {" "}
             {ticketCounts[0]}{" "}
           </span>
-          <span className="text-gray-100 text-2xl  font-medium ">
+          <span className="text-gray-900 text-2xl  font-medium ">
             {ticketCounts[1]}
           </span>
-          <span className="text-gray-100 font-medium text-2xl  ">
+          <span className="text-gray-900 font-medium text-2xl  ">
             {ticketCounts[2]}
           </span>
         </div>
-
         <Bar
           datasetIdKey="id"
           options={options}
@@ -95,34 +96,35 @@ const Home = () => {
         />
       </div>
 
-      <div className="w-full absolute my-5 right-5 max-w-md p-4 bg-white  shadow sm:p-8 dark:bg-gray-800 ">
-        <div className="flow-root relative top-0 right-60 w-96 h-auto">
+      <div className=" absolute my-5 right-20 max-w-md p-4 bg-white sm:p-8 dark:bg-gray-800 ">
+        <div className="flow-root w-[600px] rounded-md relative top-0 right-60 p-5 border-2 h-auto ">
           <h5 className="text-xl font-bold  mb-5 leading-none text-gray-900 dark:text-white">
             Latest Issues
           </h5>
-          <ul role="list" className="h-96">
-            {tickets.map((ticket, index) => (
-              <li className="py-3 sm:py-4">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0"></div>
-                  <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                      Pagination not working...
-                    </p>
-                    <div className=" block  text-[13px] bg-red-100 font-medium mt-2 mb-3 py-1 pr-0 pl-3 w-[55px] rounded text-red-800">
-                      open
+          <Table.Root className="w-[550px]">
+            <Table.Body size="3">
+              {tickets.map((ticket) => (
+                <Table.Row key={ticket.id}>
+                  <Table.RowHeaderCell>
+                    <div className="flex flex-col  space-y-4">
+                      <Link to={`/tickets/${ticket.id}`}>
+                        <Text size="3" weight="regular">
+                          {ticket.name || "title"}
+                        </Text>
+                      </Link>
+                      <Badge size="1" color="red" className="w-[50px]">
+                        {ticket.status}
+                      </Badge>
                     </div>
-                  </div>
-
-                  <img
-                    className="w-8 h-8 mb-5 rounded-full object-cover"
-                    src="../../public/pic.jpg"
-                    alt="Neil image"
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
+                  </Table.RowHeaderCell>
+                  <Table.Cell />
+                  <Table.Cell justify="end">
+                    <Avatar fallback="A" size="2" />
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
         </div>
       </div>
     </div>

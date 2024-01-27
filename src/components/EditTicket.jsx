@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import axios from "axios"
 import moment from "moment"
 import { toast } from "react-hot-toast"
-import JoditEditor from "jodit-react"
+// import JoditEditor from "jodit-react"
 import { useParams } from "react-router-dom"
 
 const EditTicket = () => {
@@ -117,7 +117,7 @@ const EditTicket = () => {
           <label className="block text-sm font-medium text-gray-700">
             Body
           </label>
-          <JoditEditor
+          {/* <JoditEditor
             ref={editor}
             value={formData.body}
             tabIndex={1}
@@ -125,7 +125,7 @@ const EditTicket = () => {
               setFormData({ ...formData, body: newContent })
             }}
             onChange={(newContent) => {}}
-          />
+          /> */}
         </div>
 
         <div>

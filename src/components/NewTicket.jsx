@@ -2,20 +2,25 @@ import React, { useState, useEffect, useRef } from "react"
 import axios from "axios"
 import moment from "moment"
 import { toast } from "react-hot-toast"
-import JoditEditor from "jodit-react"
-import { DropdownMenu, Button, TextField } from "@radix-ui/themes"
-
+import { Button, TextField, Select } from "@radix-ui/themes"
+import { CaretDownIcon } from "@radix-ui/react-icons"
+import MarkdownEditor from "@uiw/react-markdown-editor"
 const NewTicket = () => {
-  const editor = useRef(null)
   const [users, setUsers] = useState([])
-  const [videoFile, setVideoFile] = useState(null)
-  const config = {
-    height: 500, // Set your desired default height here
-  }
+  const [mdStr, setMdStr] = useState(
+    `
+  # This is a H1
+  ## This is a H2
+  ###### This is a H6
+  ## you can start typing the description!
+  ## include html!
+  ## include code blocks:
+\`onClick={() => setFormData({ ...formData})\`
+`
+  )
   const [formData, setFormData] = useState({
     name: "",
-    body: "",
-    user_id: "",
+    user_id: 1,
     deadline: moment().add(2, "days").format("YYYY-MM-DD"),
     status: "open",
   })
@@ -51,20 +56,17 @@ const NewTicket = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     try {
-      formData.user_id = parseInt(formData.user_id)
-
-      const videoFile = document.getElementById("user_avatar").files[0]
-
+      console.log(mdStr)
+      const videoFile = document.getElementById("video").files[0]
       const formDataWithVideo = new FormData()
       formDataWithVideo.append("name", formData.name)
-      formDataWithVideo.append("body", formData.body)
+      formDataWithVideo.append("body", mdStr)
       formDataWithVideo.append("user_id", formData.user_id)
       formDataWithVideo.append("deadline", formData.deadline)
       formDataWithVideo.append("status", formData.status)
       formDataWithVideo.append("video", videoFile) // Append the video file
-
+      console.log(formData)
       const response = await axios.post(
         "http://localhost:1111/tickets",
         formDataWithVideo,
@@ -85,27 +87,22 @@ const NewTicket = () => {
     }
   }
 
-  const handleFileChange = (e) => {
-    setVideoFile(e.target.files[0])
-  }
-
   return (
-    <div className="max-w-4xl my-10 mt-[40px] mx-auto w-[1000px]">
+    <div className="max-w-4xl my-10 mt-[40px] mx-60">
       <h2 className="text-2xl font-bold mb-4">Create New Ticket</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="max-w-4xl space-y-4 ">
         <div>
           <TextField.Input
             size="3"
             placeholder="Search the docs…"
-            onChange={handleChange}
+            name="name"
+            onChange={(e) => handleChange(e)}
           />
         </div>
 
         <input
           type="file"
-          onChange={() => handleFileChange(e)}
-          name="file-input"
-          id="file-input"
+          id="video"
           className="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600
     file:bg-gray-50 file:border-0
     file:bg-gray-100 file:me-4
@@ -113,74 +110,83 @@ const NewTicket = () => {
     dark:file:bg-gray-700 dark:file:text-gray-400"
         />
         <div>
-          <JoditEditor
-            ref={editor}
-            config={config}
-            value={formData.body}
-            tabIndex={1}
-            onBlur={(newContent) => {
-              setFormData({ ...formData, body: newContent })
+          <MarkdownEditor
+            value={mdStr}
+            onChange={(value) => {
+              setMdStr(value)
+              console.log(value)
             }}
-            onChange={(newContent) => {}}
-            className="h-[100px]"
           />
         </div>
 
-        <div>
-          <TextField.Input
-            type="date"
-            name="deadline"
-            value={formData.deadline}
-            onChange={handleChange}
-            size="3"
-          />
-        </div>
-        <div className="text-center mb-5 space-x-10">
-          <DropdownMenu.Root
-            name="user_id"
-            value={formData.user_id}
-            onChange={handleChange}
-          >
-            <DropdownMenu.Trigger>
-              <button className="bg-white w-[26.5rem] hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                Assigned to
-              </button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              {users &&
-                users.length > 0 &&
-                users.map((u) => (
-                  <DropdownMenu.Item>{u.name}</DropdownMenu.Item>
-                ))}
-              <DropdownMenu.Separator />
-              <DropdownMenu.Item>not-assigned </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-
-          <DropdownMenu.Root
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-          >
-            <DropdownMenu.Trigger>
-              <button className="bg-white w-[26.5rem] hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                {formData.status}
-              </button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item>Open</DropdownMenu.Item>
-              <DropdownMenu.Item>Closed</DropdownMenu.Item>
-              <DropdownMenu.Separator />
-              <DropdownMenu.Item>In-Progress</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
-        </div>
         <div className="pt-5">
-          <Button type="submit" variant="classic">
+          <Button type="submit" variant="solid">
             Create Ticket
           </Button>
         </div>
       </form>
+      <div className=" absolute right-60 w-[200px] ml-20 top-[9.5rem] flex flex-col space-y-4">
+        <Select.Root defaultValue="not-assigned" size="2">
+          <Select.Trigger>
+            <Button variant="outline" color="purple">
+              <CaretDownIcon />
+            </Button>
+          </Select.Trigger>
+          <Select.Content color="purple">
+            {users.map((user) => (
+              <Select.Item
+                onClick={() => setFormData({ ...formData, user_id: u.id })}
+                value={user.id}
+              >
+                {user.name}
+              </Select.Item>
+            ))}
+            <Select.Item
+              value={null}
+              onClick={() => setFormData({ ...formData, user_id: null })}
+            >
+              Not Assigned
+            </Select.Item>
+          </Select.Content>
+        </Select.Root>
+
+        <Select.Root defaultValue="open" size="2">
+          <Select.Trigger>
+            <Button variant="outline" color="purple">
+              <CaretDownIcon />
+            </Button>
+          </Select.Trigger>
+          <Select.Content color="purple">
+            <Select.Item value="open">open</Select.Item>
+            <Select.Item value="closed">closed</Select.Item>
+            <Select.Item value="in-progress">in-progress</Select.Item>
+          </Select.Content>
+        </Select.Root>
+        <div className="w-full ">
+          <div className="relative max-w-sm">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+              </svg>
+            </div>
+            <input
+              datepicker
+              type="date"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Select date"
+              onChange={(e) =>
+                setFormData({ ...formData, deadline: e.target.value })
+              }
+            />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
