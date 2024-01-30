@@ -11,7 +11,7 @@ const EditTicket = () => {
   const [users, setUsers] = useState([])
   const [formData, setFormData] = useState({
     name: "",
-    body: "",
+    description: "",
     deadline: moment().add(2, "days").format("YYYY-MM-DD"),
     status: "open",
   })
@@ -48,7 +48,7 @@ const EditTicket = () => {
         // Pre-fill the form data with existing ticket details
         setFormData({
           name: response.data.name,
-          body: response.data.body,
+          description: response.data.body,
           deadline: moment(response.data.deadline).format("YYYY-MM-DD"),
           status: response.data.status,
         })

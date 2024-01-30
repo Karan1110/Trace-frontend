@@ -8,15 +8,36 @@ import {
   Avatar,
   Heading,
   ScrollArea,
+  IconButton,
 } from "@radix-ui/themes"
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
 import axios from "axios"
 import React, { useEffect, useState } from "react"
+import { toast } from "react-hot-toast"
+import Spinner from "./Spinner"
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
-  const [user, setUser] = useState(false)
+  const [user, setUser] = useState(null)
+  const [users, setUsers] = useState([])
+
+  const fetchUsers = async (query) => {
+    try {
+      const response = await axios.get("http://localhost:1111/users/search", {
+        params: {
+          user: query,
+        },
+        headers: { "x-auth-token": localStorage.getItem("token") },
+      })
+
+      console.log(response.data)
+      setUsers(response.data)
+    } catch (error) {
+      toast(error.message)
+      console.error(error)
+    }
+  }
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,6 +49,7 @@ const Navbar = () => {
           },
         }
       )
+      console.log(response.data)
       setUser(response.data)
     }
     fetchUser()
@@ -93,18 +115,62 @@ const Navbar = () => {
 
         {/* Right elements */}
         <div className="relative flex mr-60 items-center">
-          <div className="mr-10">
+          <div className="mr-10 flex flex-rol space-x-2">
             <TextField.Root>
-              <TextField.Slot>
-                <MagnifyingGlassIcon height="20" width="25" />
-              </TextField.Slot>
               <TextField.Input
                 placeholder="Search users "
                 color="purple"
                 size="2"
-                width="50"
+                width="75"
+                onChange={(e) => fetchUsers(e.target.value)}
               />
             </TextField.Root>
+
+            <Popover.Root>
+              <Popover.Trigger>
+                <IconButton variant="soft">
+                  <MagnifyingGlassIcon width="18" height="18" />
+                </IconButton>
+              </Popover.Trigger>
+              <Popover.Content style={{ width: 360 }}>
+                <Popover.Close>
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 15 15"
+                    fill="none"
+                    className="mb-4 "
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0.877075 7.49988C0.877075 3.84219 3.84222 0.877045 7.49991 0.877045C11.1576 0.877045 14.1227 3.84219 14.1227 7.49988C14.1227 11.1575 11.1576 14.1227 7.49991 14.1227C3.84222 14.1227 0.877075 11.1575 0.877075 7.49988ZM7.49991 1.82704C4.36689 1.82704 1.82708 4.36686 1.82708 7.49988C1.82708 10.6329 4.36689 13.1727 7.49991 13.1727C10.6329 13.1727 13.1727 10.6329 13.1727 7.49988C13.1727 4.36686 10.6329 1.82704 7.49991 1.82704ZM9.85358 5.14644C10.0488 5.3417 10.0488 5.65829 9.85358 5.85355L8.20713 7.49999L9.85358 9.14644C10.0488 9.3417 10.0488 9.65829 9.85358 9.85355C9.65832 10.0488 9.34173 10.0488 9.14647 9.85355L7.50002 8.2071L5.85358 9.85355C5.65832 10.0488 5.34173 10.0488 5.14647 9.85355C4.95121 9.65829 4.95121 9.3417 5.14647 9.14644L6.79292 7.49999L5.14647 5.85355C4.95121 5.65829 4.95121 5.3417 5.14647 5.14644C5.34173 4.95118 5.65832 4.95118 5.85358 5.14644L7.50002 6.79289L9.14647 5.14644C9.34173 4.95118 9.65832 4.95118 9.85358 5.14644Z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </Popover.Close>
+                <Flex gap="3">
+                  {users &&
+                    users.map((user) => (
+                      <React.Fragment key={user.id}>
+                        <Avatar size="2" fallback="A" />
+                        <Box grow="1">
+                          <Flex gap="3" mt="1" justify="between">
+                            <Flex align="center" gap="2" asChild>
+                              <Text as="label" size="2">
+                                {user.name}
+                              </Text>
+                            </Flex>
+                          </Flex>
+                        </Box>
+                      </React.Fragment>
+                    ))}
+                </Flex>
+
+                {!users && <Spinner />}
+              </Popover.Content>
+            </Popover.Root>
           </div>
           <div
             className="relative"
@@ -152,13 +218,12 @@ const Navbar = () => {
                     </Heading>
                     <hr />
                     <Flex mt="4" direction="column" gap="4">
-                      {user.Notifications ? (
-                        user.Notifications.map((n) => (
-                          <Text as="p">{n.message}</Text>
-                        ))
-                      ) : (
-                        <Text as="p">No notifications retrieved!</Text>
-                      )}
+                      {user &&
+                        user.Notification.map((n) => (
+                          <Text key={n.id} as="p">
+                            {n.message}
+                          </Text>
+                        ))}
                     </Flex>
                   </Box>
                 </ScrollArea>
@@ -177,9 +242,11 @@ const Navbar = () => {
                 <Flex gap="3">
                   <Box grow="1">
                     <Flex gap="2" direction="column" justify="between">
-                      <Text weight="regular" size="2">
-                        {user.email}
-                      </Text>
+                      {user && (
+                        <Text weight="regular" size="2">
+                          {user.email}
+                        </Text>
+                      )}
                       <Popover.Close>
                         <Button size="1" color="purple">
                           Log out

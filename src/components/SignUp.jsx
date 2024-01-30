@@ -13,7 +13,6 @@ const SignUp = () => {
   const [age, setAge] = useState("")
   const [isAdmin, setIsAdmin] = useState(false)
   const [departmentId, setDepartmentId] = useState("")
-  const [totalWorkingDays, setTotalWorkingDays] = useState("")
   const [departmentSuggestions, setDepartmentSuggestions] = useState([])
   const [department, setDepartment] = useState("none")
 
@@ -46,7 +45,6 @@ const SignUp = () => {
         age,
         isadmin: isAdmin,
         department_id: departmentId,
-        total_working_days: totalWorkingDays,
       })
 
       toast.success("Sign-up successful!")
@@ -63,7 +61,6 @@ const SignUp = () => {
       setAge("")
       setIsAdmin(false)
       setDepartmentId("")
-      setTotalWorkingDays("")
     } catch (error) {
       toast.error("Error signing up. Please try again.")
       console.error("Error creating employee:", error)
@@ -216,24 +213,6 @@ const SignUp = () => {
           />
         </div>
 
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="totalWorkingDays"
-          >
-            Total Working Days
-          </label>
-          <TextField.Input
-            size="3"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="totalWorkingDays"
-            type="number"
-            name="totalWorkingDays"
-            placeholder="Enter total working days"
-            value={totalWorkingDays}
-            onChange={(e) => setTotalWorkingDays(e.target.value)}
-          />
-        </div>
         <div className="cursor-pointer">
           <Button variant="solid" type="submit">
             sign up

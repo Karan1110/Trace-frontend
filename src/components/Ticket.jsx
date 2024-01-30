@@ -151,7 +151,7 @@ console.log(message);
               <div className="border-2 p-7 w-100 rounded-lg mb-0 mt-5 ">
                 <MarkdownEditor.Markdown source={ticket.body} />
               </div>
-              {/* <video class="w-[250px] h-[250px] mx-auto" controls>
+              {/* <video className="w-[250px] h-[250px] mx-auto" controls>
             <source src={ticket.videoUrl} type="video/mp4" />
             Your browser does not support the video tag.
           </video> */}
