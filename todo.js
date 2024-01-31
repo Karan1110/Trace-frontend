@@ -1,12 +1,13 @@
-//   UPDATE and DELETE users
-//   READ leaderboards - frontend
-//   READ the current user's pending tickets and his feed in home page - frontend
-//   login  - frontend
-//   UPDATE and DELETE meetings*
 //   READ, ADD and REMOVE - Reviews*
 //   READ statistics
 //   block user
-//   join multiple departments...
+//   follow user...
+
+
+//   UPDATE and DELETE users
+//   login  - frontend
+//   UPDATE and DELETE meetings*
+
 
 /* 
 features - 

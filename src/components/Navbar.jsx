@@ -42,7 +42,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const response = await axios.get(
-        `http://localhost:1111/users/${localStorage.getItem("employee_id")}`,
+        `http://localhost:1111/users/${localStorage.getItem("user_id")}`,
         {
           headers: {
             "x-auth-token": localStorage.getItem("token"),

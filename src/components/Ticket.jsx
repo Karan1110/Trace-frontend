@@ -94,7 +94,7 @@ const Ticket = () => {
     ticket.Comments.push({
       content: content,
       ticket_id: ticket.id,
-      user_id: localStorage.getItem("employee_id"),
+      user_id: localStorage.getItem("user_id"),
     })
   }
 
@@ -187,7 +187,7 @@ console.log(message);
           </Button>
           {ticket && (
             <Button variant="solid" color="violet" onClick={() => save()}>
-              {ticket.User.Saved.some((s) => s.ticket_id == ticket.id)
+              {ticket.User.mySavedTickets.some((s) => s.ticket_id == ticket.id)
                 ? "unsave"
                 : "save"}
               <svg

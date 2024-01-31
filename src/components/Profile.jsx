@@ -12,7 +12,6 @@ import {
   Badge,
   Heading,
 } from "@radix-ui/themes"
-import moment from "moment"
 import { Link } from "react-router-dom"
 
 const PerformanceModal = ({ onClose, employeeId }) => {
@@ -148,7 +147,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const employee_id = localStorage.getItem("employee_id")
+        const employee_id = localStorage.getItem("user_id")
 
         const response = await axios.get(
           `http://localhost:1111/users/${employee_id}`,
@@ -182,7 +181,7 @@ const Profile = () => {
       {isPerformanceModalOpen && (
         <PerformanceModal
           onClose={() => setIsPerformanceModalOpen(false)}
-          employeeId={localStorage.getItem("employee_id")}
+          employeeId={localStorage.getItem("user_id")}
         />
       )}
       <div className="mx-auto max-w-4xl mb-40 ">
@@ -193,65 +192,51 @@ const Profile = () => {
             <Text>{user.email}</Text>
           </div>
         )}
-        <div className="flex flex-row mb-10 space-x-4">
-          <div
-            className="w-1/4 h-[200px] bg-green-500 px-8  
-        pt-8 pb-24 rounded-lg overflow-hidden  
-        text-center relative"
-          >
-            {user && (
-              <div
-                className="w-40 h-40 rounded-full  
-                inline-flex items-center justify-center  
-                bg-white text-gray-700 text-xl font-bold"
-              >
-                {user.Performance.points || 0} points
-              </div>
-            )}
-          </div>
-          <div
-            className="w-1/4 h-[200px] bg-green-500 px-8  
-        pt-8 pb-24 rounded-lg overflow-hidden  
-        text-center relative"
-          >
-            <div
-              className="w-40 h-40 rounded-full  
-                inline-flex items-center justify-center  
-                bg-white text-gray-700 text-xl font-bold"
-            >
-              last seen
-            </div>
-          </div>
-          <div
-            className="w-1/4 h-[200px] bg-green-500 px-8  
-        pt-8 pb-24 rounded-lg overflow-hidden  
-        text-center relative"
-          >
-            {user && (
-              <div
-                className="w-40 h-40 rounded-full  
-                inline-flex items-center justify-center  
-                bg-white text-gray-700 text-xl font-bold"
-              >
-                {user.Department.name}
-              </div>
-            )}
-          </div>
+        {user && (
+          <Flex gap="3" direction="row" align="center" justify="center">
+            <Card size="2" style={{ width: 350 }}>
+              <Flex gap="3" align="center">
+                <Avatar size="4" radius="full" fallback="P" color="indigo" />
+                <Box>
+                  <Text as="div" weight="bold">
+                    Points
+                  </Text>
+                  <Text as="div" color="gray">
+                    {user?.Performance?.points || 0}
+                  </Text>
+                </Box>
+              </Flex>
+            </Card>
 
-          <div
-            className="w-1/4 h-[200px] bg-green-500 px-8  
-        pt-8 pb-24 rounded-lg overflow-hidden  
-        text-center relative"
-          >
-            <div
-              className="w-40 h-40 rounded-full  
-                inline-flex items-center justify-center  
-                bg-white text-gray-700 text-xl font-bold"
-            >
-              punctuality score
-            </div>
-          </div>
-        </div>
+            <Card size="2" style={{ width: 425 }}>
+              <Flex gap="4" align="center">
+                <Avatar size="4" radius="full" fallback="P" color="indigo" />
+                <Box>
+                  <Text as="div" weight="bold">
+                    punctuality score
+                  </Text>
+                  <Text as="div" color="gray">
+                    12
+                  </Text>
+                </Box>
+              </Flex>
+            </Card>
+
+            <Card size="2" style={{ width: 500 }}>
+              <Flex gap="4" align="center">
+                <Avatar size="4" radius="full" fallback="L" color="indigo" />
+                <Box>
+                  <Text as="div" weight="bold">
+                    Department
+                  </Text>
+                  <Text as="div" color="gray">
+                    {user.Department.name}
+                  </Text>
+                </Box>
+              </Flex>
+            </Card>
+          </Flex>
+        )}
         <Tabs.Root defaultValue="account">
           <Tabs.List>
             <Tabs.Trigger value="account">Account</Tabs.Trigger>
@@ -355,3 +340,4 @@ const Profile = () => {
 }
 
 export default Profile
+//

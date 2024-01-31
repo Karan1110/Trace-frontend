@@ -17,6 +17,7 @@ import Meetings from "./components/Meetings"
 import TicketDetails from "./components/Ticket"
 import NewTicket from "./components/NewTicket"
 import EditTicket from "./components/EditTicket"
+import Leaderboard from "./components/Leaderboard.jsx"
 
 const App = () => {
   return (
@@ -26,10 +27,7 @@ const App = () => {
         <Navbar />
         <Router>
           <Routes>
-            <Route
-              path="/chats/:id"
-              element={<ChatPage user_id={user_id} xAuthToken={xAuthToken} />}
-            />
+            <Route path="/chats/:id" element={<ChatPage />} />
             <Route path="/chat" element={<ChatListPage />} />
             <Route path="/verify" element={<EmailVerificationForm />} />
             <Route path="/departments" element={<Department />} />
@@ -41,6 +39,7 @@ const App = () => {
             <Route path="/new" element={<NewTicket />} />
             <Route path="/meetings" element={<Meetings />} />
             <Route path="/tickets" element={<Tickets />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
           </Routes>
         </Router>
       </Theme>

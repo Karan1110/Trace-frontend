@@ -48,7 +48,7 @@ const SignUp = () => {
       })
 
       toast.success("Sign-up successful!")
-      localStorage.setItem("employee_id", response.data.User.id)
+      localStorage.setItem("user_id", response.data.User.id)
       localStorage.setItem("token", response.data.token)
       console.log("User created:", response.data)
 
@@ -66,13 +66,6 @@ const SignUp = () => {
       console.error("Error creating employee:", error)
     }
   }
-
-  // Clear suggestions when department input is empty
-  useHotkeys("backspace", () => {
-    if (departmentId === "") {
-      setDepartmentSuggestions([])
-    }
-  })
 
   return (
     <div className="max-w-xl mx-auto mt-[40px] h-100">

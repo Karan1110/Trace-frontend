@@ -18,11 +18,14 @@ const NewTicket = () => {
 \`onClick={() => setFormData({ ...formData})\`
 `
   )
+  const [departmentSuggestions, setDepartmentSuggestions] = useState([])
+
   const [formData, setFormData] = useState({
     name: "",
     user_id: 1,
     deadline: moment().add(2, "days").format("YYYY-MM-DD"),
     status: "open",
+    department_id: 1,
   })
 
   useEffect(() => {
@@ -37,6 +40,11 @@ const NewTicket = () => {
         })
 
         setUsers(response.data)
+        async function fetchDepartments() {
+          const response = await axios.get("http://localhost:1111/departments")
+          setDepartmentSuggestions(response.data)
+        }
+        fetchDepartments()
       } catch (error) {
         toast.error("Error fetching users: " + error.message)
         console.error("Error fetching users:", error)
@@ -65,6 +73,7 @@ const NewTicket = () => {
       formDataWithVideo.append("user_id", formData.user_id)
       formDataWithVideo.append("deadline", formData.deadline)
       formDataWithVideo.append("status", formData.status)
+      formDataWithVideo.append("department_id", formData.department_id)
       formDataWithVideo.append("video", videoFile) // Append the video file
       console.log(formData)
       const response = await axios.post(
@@ -147,6 +156,25 @@ const NewTicket = () => {
             >
               Not Assigned
             </Select.Item>
+          </Select.Content>
+        </Select.Root>
+        <Select.Root defaultValue="1" size="2">
+          <Select.Trigger>
+            <Button variant="outline" color="purple">
+              <CaretDownIcon />
+            </Button>
+          </Select.Trigger>
+          <Select.Content color="purple">
+            {departmentSuggestions.map((d) => (
+              <Select.Item
+                onClick={() =>
+                  setFormData({ ...formData, department_id: d.id })
+                }
+                value={d.id}
+              >
+                {d.name}
+              </Select.Item>
+            ))}
           </Select.Content>
         </Select.Root>
 
