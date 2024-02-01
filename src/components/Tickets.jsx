@@ -32,6 +32,7 @@ const Tickets = () => {
             params: {
               sortingProperty: sortingProperty,
             },
+            headers: { "x-auth-token": localStorage.getItem("token") },
           }
         )
         setTickets(response.data)

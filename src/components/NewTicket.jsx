@@ -65,17 +65,15 @@ const NewTicket = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      console.log(mdStr)
       const videoFile = document.getElementById("video").files[0]
       const formDataWithVideo = new FormData()
       formDataWithVideo.append("name", formData.name)
-      formDataWithVideo.append("body", mdStr)
+      formDataWithVideo.append("description", mdStr)
       formDataWithVideo.append("user_id", formData.user_id)
       formDataWithVideo.append("deadline", formData.deadline)
       formDataWithVideo.append("status", formData.status)
       formDataWithVideo.append("department_id", formData.department_id)
       formDataWithVideo.append("video", videoFile) // Append the video file
-      console.log(formData)
       const response = await axios.post(
         "http://localhost:1111/tickets",
         formDataWithVideo,
@@ -91,7 +89,7 @@ const NewTicket = () => {
       toast.success("Ticket created successfully!")
       // Additional actions or redirect can be added here
     } catch (error) {
-      toast.error("Error creating ticket. Please try again.")
+      toast("Error creating ticket. Please try again.")
       console.error("Error creating ticket:", error)
     }
   }
@@ -99,7 +97,7 @@ const NewTicket = () => {
   return (
     <div className="max-w-4xl my-10 mt-[40px] mx-60">
       <h2 className="text-2xl font-bold mb-4">Create New Ticket</h2>
-      <form onSubmit={handleSubmit} className="max-w-4xl space-y-4 ">
+      <form onSubmit={handleSubmit} className="max-w-2xl space-y-4 ">
         <div>
           <TextField.Input
             size="3"
@@ -178,7 +176,13 @@ const NewTicket = () => {
           </Select.Content>
         </Select.Root>
 
-        <Select.Root defaultValue="open" size="2">
+        <Select.Root
+          defaultValue="open"
+          size="2"
+          onValueChange={(value) => {
+            setFormData({ ...formData, status: value })
+          }}
+        >
           <Select.Trigger>
             <Button variant="outline" color="purple">
               <CaretDownIcon />

@@ -9,9 +9,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [salary, setSalary] = useState("")
-  const [age, setAge] = useState("")
-  const [isAdmin, setIsAdmin] = useState(false)
   const [departmentId, setDepartmentId] = useState("")
   const [departmentSuggestions, setDepartmentSuggestions] = useState([])
   const [department, setDepartment] = useState("none")
@@ -41,9 +38,6 @@ const SignUp = () => {
         name,
         email,
         password,
-        salary,
-        age,
-        isadmin: isAdmin,
         department_id: departmentId,
       })
 
@@ -57,9 +51,6 @@ const SignUp = () => {
       setEmail("")
       setPassword("")
       setConfirmPassword("")
-      setSalary("")
-      setAge("")
-      setIsAdmin(false)
       setDepartmentId("")
     } catch (error) {
       toast.error("Error signing up. Please try again.")
@@ -165,44 +156,6 @@ const SignUp = () => {
             placeholder="Confirm your password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="salary"
-          >
-            Salary
-          </label>
-          <TextField.Input
-            size="3"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="salary"
-            type="number"
-            name="salary"
-            placeholder="Enter your salary"
-            value={salary}
-            onChange={(e) => setSalary(e.target.value)}
-          />
-        </div>
-
-        <div className="mb-4">
-          <label
-            className="block text-gray-700 text-sm font-bold mb-2"
-            htmlFor="age"
-          >
-            Age
-          </label>
-          <TextField.Input
-            size="3"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="age"
-            type="number"
-            name="age"
-            placeholder="Enter your age"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
           />
         </div>
 

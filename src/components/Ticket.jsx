@@ -132,7 +132,7 @@ const Ticket = () => {
                 <Text weight="medium"> Fri Jan 17 2023</Text>
               </div>
               <div className="border-2 p-7 w-100 rounded-lg mb-0 mt-5 ">
-                <MarkdownEditor.Markdown source={ticket.body} />
+                <MarkdownEditor.Markdown source={ticket.description} />
               </div>
               {/* <video className="w-[250px] h-[250px] mx-auto" controls>
             <source src={ticket.videoUrl} type="video/mp4" />

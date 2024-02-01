@@ -18,7 +18,6 @@ import Spinner from "./Spinner"
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false)
-  const [showProfile, setShowProfile] = useState(false)
   const [user, setUser] = useState(null)
   const [users, setUsers] = useState([])
 
@@ -84,32 +83,36 @@ const Navbar = () => {
         <div
           className="!visible hidden flex-grow basis-[100%] items-center lg:!flex lg:basis-auto"
           id="navbarSupportedContent1"
-          data-te-collapse-item
         >
           {/* Logo */}
-          <a
-            className="mb-4 ml-2 mr-5 mt-3 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mb-0 lg:mt-0"
-            href="#"
-          >
-            <img
-              src="../../public/logo.webp"
-              style={{ height: "25px" }}
-              alt="TE Logo"
-              className="dark:text-white "
-              loading="lazy"
-            />
-          </a>
+          <div className="mb-4 ml-2 mr-5 mt-3 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400 lg:mb-0 lg:mt-0">
+            <a href={"/"}>
+              <img
+                src="../../public/logo.webp"
+                style={{ height: "25px" }}
+                alt="TE Logo"
+                className="dark:text-white "
+                loading="lazy"
+              />
+            </a>
+          </div>
           {/* Left navigation links */}
           <div className=" flex flex-col  space-x-7 lg:flex-row">
-            <Text weight="regular" className="cursor-pointer hover:scale-95">
-              Dashboard
-            </Text>
-            <Text weight="regular" className="cursor-pointer hover:scale-95">
-              Team
-            </Text>
-            <Text weight="regular" className="cursor-pointer hover:scale-95">
-              Projects
-            </Text>
+            <a href={"/tickets"}>
+              <Text weight="regular" className="cursor-pointer hover:scale-95">
+                Tickets
+              </Text>
+            </a>
+            <a href={"/meetings"}>
+              <Text weight="regular" className="cursor-pointer hover:scale-95">
+                Meetings
+              </Text>
+            </a>
+            <a href={"/"}>
+              <Text weight="regular" className="cursor-pointer hover:scale-95">
+                Home
+              </Text>
+            </a>
           </div>
         </div>
 
