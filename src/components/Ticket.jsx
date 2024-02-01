@@ -25,7 +25,6 @@ const Ticket = () => {
   const [ticket, setTicket] = useState(null)
   const [content, setContent] = useState("")
   const [users, setUsers] = useState([])
-  const [selectedUser, setSelectedUser] = useState(1)
   const { id } = useParams()
   const save = async () => {
     try {
@@ -46,8 +45,6 @@ const Ticket = () => {
   }
 
   useEffect(() => {
-    // Fetch ticket details
-    console.log("id is ", id)
     const fetchTicket = async () => {
       try {
         const response = await axios.get(`http://localhost:1111/tickets/${id}`)
@@ -75,7 +72,7 @@ const Ticket = () => {
 
     fetchTicket()
     fetchUsers()
-  }, [id])
+  }, [])
 
   const addComment = async () => {
     await axios.post(
@@ -98,40 +95,26 @@ const Ticket = () => {
     })
   }
 
-  useEffect(() => {
-    const handleAssign = async () => {
-      try {
-        // Call API to assign ticket to selected user
-        await axios.put(
-          `http://localhost:1111/tickets/assign/${id}`,
-          {
-            user_id: selectedUser,
+  const handleAssign = async (userId) => {
+    try {
+      await axios.put(
+        `http://localhost:1111/tickets/assign/${id}`,
+        {
+          user_id: userId,
+        },
+        {
+          headers: {
+            "x-auth-token": localStorage.getItem("token"),
           },
-          {
-            headers: {
-              "x-auth-token": localStorage.getItem("token"),
-            },
-          }
-        )
+        }
+      )
 
-        // Display success message or perform additional actions
-        console.log("Ticket assigned successfully!")
-      } catch (error) {
-        console.error("Error assigning ticket:", error)
-      }
+      toast.success("Ticket assigned successfully!")
+    } catch (error) {
+      toast("something failed.")
+      console.log(error.message, error)
     }
-    handleAssign()
-  }, [selectedUser])
-  const markdown = `# Hello, world!
-
-This is **Markdown Parser React**, a *flexible* Markdown renderer.
-
-## Syntax Highlighting
-
-\`\`\`javascript
-const message = 'Hello, world!';
-console.log(message);
-\`\`\``
+  }
 
   return (
     <>
@@ -162,7 +145,10 @@ console.log(message);
         {!ticket && <Spinner />}
         <div className="absolute right-60 w-[200px] ml-20  flex flex-col space-y-5">
           {ticket && (
-            <Select.Root defaultValue={ticket.user_id}>
+            <Select.Root
+              defaultValue={ticket.user_id}
+              onValueChange={(value) => handleAssign(value)}
+            >
               <Select.Trigger>
                 <Button variant="outline">
                   <CaretDownIcon />
@@ -170,10 +156,7 @@ console.log(message);
               </Select.Trigger>
               <Select.Content color="purple">
                 {users.map((user) => (
-                  <Select.Item
-                    onClick={() => setSelectedUser(user.id)}
-                    value={user.id}
-                  >
+                  <Select.Item value={user.id} key={user.id}>
                     {user.name}
                   </Select.Item>
                 ))}

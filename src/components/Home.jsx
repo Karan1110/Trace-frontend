@@ -23,13 +23,23 @@ Chart.register(
   BarElement
 )
 import { Bar } from "react-chartjs-2"
-import { Table, Badge, Avatar, Text, Tabs, Card, Box } from "@radix-ui/themes"
+import {
+  Table,
+  Badge,
+  Avatar,
+  Text,
+  Tabs,
+  Card,
+  Box,
+  Flex,
+} from "@radix-ui/themes"
 import { Link } from "react-router-dom"
 
 const Home = () => {
   const [ticketCounts, setTicketsCount] = useState([])
   const [tickets, setTickets] = useState([])
   const [feed, setFeed] = useState([])
+  const [followFeed, setFollowFeed] = useState([])
   const [pendingTickets, setPendingTickets] = useState([])
   const [departmentTickets, setDepartmentTickets] = useState([])
 
@@ -77,6 +87,16 @@ const Home = () => {
         )
         setDepartmentTickets(response5.data)
         console.log(response5.data)
+
+        const response6 = await axios.get(
+          "http://localhost:1111/tickets/followFeed",
+          {
+            headers: {
+              "x-auth-token": localStorage.getItem("token"),
+            },
+          }
+        )
+        setFollowFeed(response6.data)
       } catch (error) {
         console.error("Error fetching ticket counts:", error)
         return []
@@ -177,6 +197,7 @@ const Home = () => {
           <Tabs.Trigger value="account">Feed</Tabs.Trigger>
           <Tabs.Trigger value="documents">Pending</Tabs.Trigger>
           <Tabs.Trigger value="settings">Department</Tabs.Trigger>
+          <Tabs.Trigger value="following">following</Tabs.Trigger>
         </Tabs.List>
 
         <Box px="4" pt="3" pb="2">
@@ -234,6 +255,32 @@ const Home = () => {
             {departmentTickets &&
               departmentTickets.length > 0 &&
               departmentTickets.map((ticket) => {
+                return (
+                  <Card size="2" style={{ width: 425 }}>
+                    <Flex gap="4" align="center">
+                      <Avatar
+                        size="4"
+                        radius="full"
+                        fallback="T"
+                        color="indigo"
+                      />
+                      <Box>
+                        <Text as="div" weight="bold">
+                          {ticket.name}
+                        </Text>
+                        <Text as="div" color="gray">
+                          {ticket.status}
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Card>
+                )
+              })}
+          </Tabs.Content>
+          <Tabs.Content value="following">
+            {departmentTickets &&
+              followFeed.length > 0 &&
+              followFeed.map((ticket) => {
                 return (
                   <Card size="2" style={{ width: 425 }}>
                     <Flex gap="4" align="center">
