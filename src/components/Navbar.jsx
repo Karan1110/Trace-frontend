@@ -31,7 +31,7 @@ const Navbar = () => {
       })
 
       console.log(response.data)
-      setUsers(response.data)
+      setUsers(response.data.user)
     } catch (error) {
       toast(error.message)
       console.error(error)
@@ -222,6 +222,8 @@ const Navbar = () => {
                     <hr />
                     <Flex mt="4" direction="column" gap="4">
                       {user &&
+                        user.Notification &&
+                        user.Notification.length > 0 &&
                         user.Notification.map((n) => (
                           <Text key={n.id} as="p">
                             {n.message}

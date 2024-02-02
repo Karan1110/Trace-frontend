@@ -18,6 +18,7 @@ import TicketDetails from "./components/Ticket"
 import NewTicket from "./components/NewTicket"
 import EditTicket from "./components/EditTicket"
 import Leaderboard from "./components/Leaderboard.jsx"
+import User from "./components/User"
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
             <Route path="/meetings" element={<Meetings />} />
             <Route path="/tickets" element={<Tickets />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/users/:id" element={<User />} />
           </Routes>
         </Router>
       </Theme>

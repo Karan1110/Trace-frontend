@@ -65,6 +65,7 @@ const NewTicket = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      console.log(formData)
       const videoFile = document.getElementById("video").files[0]
       const formDataWithVideo = new FormData()
       formDataWithVideo.append("name", formData.name)
@@ -92,6 +93,13 @@ const NewTicket = () => {
       toast("Error creating ticket. Please try again.")
       console.error("Error creating ticket:", error)
     }
+  }
+  const handleUserChange = (v) => {
+    setFormData({ ...formData, user_id: v })
+  }
+
+  const handleDepartmentChange = (v) => {
+    setFormData({ ...formData, department_id: v })
   }
 
   return (
@@ -133,7 +141,11 @@ const NewTicket = () => {
         </div>
       </form>
       <div className=" absolute right-60 w-[200px] ml-20 top-[9.5rem] flex flex-col space-y-4">
-        <Select.Root defaultValue="not-assigned" size="2">
+        <Select.Root
+          defaultValue={null}
+          size="2"
+          onValueChange={(v) => handleUserChange(v)}
+        >
           <Select.Trigger>
             <Button variant="outline" color="purple">
               <CaretDownIcon />
@@ -141,22 +153,18 @@ const NewTicket = () => {
           </Select.Trigger>
           <Select.Content color="purple">
             {users.map((user) => (
-              <Select.Item
-                onClick={() => setFormData({ ...formData, user_id: u.id })}
-                value={user.id}
-              >
+              <Select.Item key={user.id} value={user.id}>
                 {user.name}
               </Select.Item>
             ))}
-            <Select.Item
-              value={null}
-              onClick={() => setFormData({ ...formData, user_id: null })}
-            >
-              Not Assigned
-            </Select.Item>
+            <Select.Item value={null}>Not Assigned</Select.Item>
           </Select.Content>
         </Select.Root>
-        <Select.Root defaultValue="1" size="2">
+        <Select.Root
+          defaultValue={1}
+          size="2"
+          onValueChange={(v) => handleDepartmentChange(v)}
+        >
           <Select.Trigger>
             <Button variant="outline" color="purple">
               <CaretDownIcon />
@@ -164,12 +172,7 @@ const NewTicket = () => {
           </Select.Trigger>
           <Select.Content color="purple">
             {departmentSuggestions.map((d) => (
-              <Select.Item
-                onClick={() =>
-                  setFormData({ ...formData, department_id: d.id })
-                }
-                value={d.id}
-              >
+              <Select.Item value={d.id} key={d.id}>
                 {d.name}
               </Select.Item>
             ))}

@@ -31,6 +31,7 @@ import {
   Tabs,
   Card,
   Box,
+  ScrollArea,
   Flex,
 } from "@radix-ui/themes"
 import { Link } from "react-router-dom"
@@ -89,7 +90,7 @@ const Home = () => {
         console.log(response5.data)
 
         const response6 = await axios.get(
-          "http://localhost:1111/tickets/followFeed",
+          "http://localhost:1111/tickets/followingFeed",
           {
             headers: {
               "x-auth-token": localStorage.getItem("token"),
@@ -160,101 +161,51 @@ const Home = () => {
 
         <div className=" absolute my-5 right-20 max-w-md p-4 bg-white sm:p-8 dark:bg-gray-800 ">
           <div className="flow-root w-[600px] rounded-md relative top-0 right-60 p-5 border-2 h-auto ">
-            <h5 className="text-xl font-bold  mb-5 leading-none text-gray-900 dark:text-white">
-              Latest Issues
-            </h5>
-            <Table.Root className="w-[550px]">
-              <Table.Body size="3">
-                {tickets &&
-                  tickets.map((ticket) => (
-                    <Table.Row key={ticket.id}>
-                      <Table.RowHeaderCell>
-                        <div className="flex flex-col  space-y-4">
-                          <Link to={`/tickets/${ticket.id}`}>
-                            <Text size="3" weight="regular">
-                              {ticket.name || "title"}
-                            </Text>
-                          </Link>
-                          <Badge size="1" color="red" className="w-[50px]">
-                            {ticket.status}
-                          </Badge>
-                        </div>
-                      </Table.RowHeaderCell>
-                      <Table.Cell />
-                      <Table.Cell justify="end">
-                        <Avatar fallback="A" size="2" />
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-              </Table.Body>
-            </Table.Root>
+            <ScrollArea>
+              <h5 className="text-xl font-bold  mb-5 leading-none text-gray-900 dark:text-white">
+                Latest Issues
+              </h5>
+              <Table.Root className="w-[550px]">
+                <Table.Body size="3">
+                  {tickets &&
+                    tickets.map((ticket) => (
+                      <Table.Row key={ticket.id}>
+                        <Table.RowHeaderCell>
+                          <div className="flex flex-col  space-y-4">
+                            <Link to={`/tickets/${ticket.id}`}>
+                              <Text size="3" weight="regular">
+                                {ticket.name || "title"}
+                              </Text>
+                            </Link>
+                            <Badge size="1" color="red" className="w-[50px]">
+                              {ticket.status}
+                            </Badge>
+                          </div>
+                        </Table.RowHeaderCell>
+                        <Table.Cell />
+                        <Table.Cell justify="end">
+                          <Avatar fallback="A" size="2" />
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                </Table.Body>
+              </Table.Root>
+            </ScrollArea>
           </div>
         </div>
       </div>
+      <div className="my-5">
+        <Tabs.Root defaultValue="account">
+          <Tabs.List>
+            <Tabs.Trigger value="account">Feed</Tabs.Trigger>
+            <Tabs.Trigger value="documents">Pending</Tabs.Trigger>
+            <Tabs.Trigger value="settings">Department</Tabs.Trigger>
+            <Tabs.Trigger value="following">following</Tabs.Trigger>
+          </Tabs.List>
 
-      <Tabs.Root defaultValue="account">
-        <Tabs.List>
-          <Tabs.Trigger value="account">Feed</Tabs.Trigger>
-          <Tabs.Trigger value="documents">Pending</Tabs.Trigger>
-          <Tabs.Trigger value="settings">Department</Tabs.Trigger>
-          <Tabs.Trigger value="following">following</Tabs.Trigger>
-        </Tabs.List>
-
-        <Box px="4" pt="3" pb="2">
-          <Tabs.Content value="account">
-            {feed.map((ticket) => {
-              return (
-                <Card size="2" style={{ width: 425 }}>
-                  <Flex gap="4" align="center">
-                    <Avatar
-                      size="4"
-                      radius="full"
-                      fallback="T"
-                      color="indigo"
-                    />
-                    <Box>
-                      <Text as="div" weight="bold">
-                        {ticket.name}
-                      </Text>
-                      <Text as="div" color="gray">
-                        {ticket.status}
-                      </Text>
-                    </Box>
-                  </Flex>
-                </Card>
-              )
-            })}
-          </Tabs.Content>
-
-          <Tabs.Content value="documents">
-            {pendingTickets.map((ticket) => {
-              return (
-                <Card size="2" style={{ width: 425 }}>
-                  <Flex gap="4" align="center">
-                    <Avatar
-                      size="4"
-                      radius="full"
-                      fallback="T"
-                      color="indigo"
-                    />
-                    <Box>
-                      <Text as="div" weight="bold">
-                        {ticket.name}
-                      </Text>
-                      <Text as="div" color="gray">
-                        {ticket.status}
-                      </Text>
-                    </Box>
-                  </Flex>
-                </Card>
-              )
-            })}
-          </Tabs.Content>
-
-          <Tabs.Content value="settings">
-            {departmentTickets &&
-              departmentTickets.length > 0 &&
-              departmentTickets.map((ticket) => {
+          <Box px="4" pt="3" pb="2">
+            <Tabs.Content value="account">
+              {feed.map((ticket) => {
                 return (
                   <Card size="2" style={{ width: 425 }}>
                     <Flex gap="4" align="center">
@@ -276,11 +227,10 @@ const Home = () => {
                   </Card>
                 )
               })}
-          </Tabs.Content>
-          <Tabs.Content value="following">
-            {departmentTickets &&
-              followFeed.length > 0 &&
-              followFeed.map((ticket) => {
+            </Tabs.Content>
+
+            <Tabs.Content value="documents">
+              {pendingTickets.map((ticket) => {
                 return (
                   <Card size="2" style={{ width: 425 }}>
                     <Flex gap="4" align="center">
@@ -302,9 +252,63 @@ const Home = () => {
                   </Card>
                 )
               })}
-          </Tabs.Content>
-        </Box>
-      </Tabs.Root>
+            </Tabs.Content>
+
+            <Tabs.Content value="settings">
+              {departmentTickets &&
+                departmentTickets.length > 0 &&
+                departmentTickets.map((ticket) => {
+                  return (
+                    <Card size="2" style={{ width: 425 }}>
+                      <Flex gap="4" align="center">
+                        <Avatar
+                          size="4"
+                          radius="full"
+                          fallback="T"
+                          color="indigo"
+                        />
+                        <Box>
+                          <Text as="div" weight="bold">
+                            {ticket.name}
+                          </Text>
+                          <Text as="div" color="gray">
+                            {ticket.status}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    </Card>
+                  )
+                })}
+            </Tabs.Content>
+            <Tabs.Content value="following">
+              {departmentTickets &&
+                followFeed.length > 0 &&
+                followFeed.map((ticket) => {
+                  return (
+                    <Card size="2" style={{ width: 425 }}>
+                      <Flex gap="4" align="center">
+                        <Avatar
+                          size="4"
+                          radius="full"
+                          fallback="T"
+                          color="indigo"
+                        />
+                        <Box>
+                          <Text as="div" weight="bold">
+                            {ticket.name}
+                          </Text>
+                          <Text as="div" color="gray">
+                            {ticket.status}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    </Card>
+                  )
+                })}
+            </Tabs.Content>
+          </Box>
+        </Tabs.Root>
+      </div>
     </>
   )
 }

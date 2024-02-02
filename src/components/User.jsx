@@ -20,6 +20,9 @@ const User = () => {
   const [colleagues, setColleagues] = useState(null)
   const { id } = useParams()
 
+  const [followers, setFollowers] = useState([])
+  const [following, setFollowing] = useState([])
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -27,7 +30,10 @@ const User = () => {
           headers: { "x-auth-token": localStorage.getItem("token") },
         })
         console.log(response.data)
-        setUser(response.data)
+        setUser(response.data.user)
+
+        setFollowers(response.data.followedBy)
+        setFollowing(response.data.following)
         const response2 = await axios.get(
           "http://localhost:1111/users/colleagues",
           {
@@ -90,23 +96,25 @@ const User = () => {
             <Avatar fallback="A" size="6" className="mx-80 mt-5 mb-3" />
             <Heading>{user.name}</Heading>
             <Text>{user.email}</Text>
-            <Button
-              variant="solid"
-              mt="2"
-              onClick={() => {
-                user.following.some((user) => {
-                  return user.id === id
+            {user && (
+              <Button
+                variant="solid"
+                mt="2"
+                onClick={() => {
+                  const isFollowing = followers.some((followingUser) => {
+                    return followingUser.id === localStorage.getItem("user_id")
+                  })
+
+                  isFollowing ? unfollow() : follow()
+                }}
+              >
+                {following.some((followingUser) => {
+                  return followingUser.id === localStorage.getItem("user_id")
                 })
-                  ? follow()
-                  : unfollow()
-              }}
-            >
-              {user.following.some((user) => {
-                return user.id === id
-              })
-                ? "unfollow"
-                : "follow"}
-            </Button>
+                  ? "unfollow"
+                  : "follow"}
+              </Button>
+            )}
           </div>
         )}
         {user && (
@@ -159,6 +167,8 @@ const User = () => {
             <Tabs.Trigger value="account">Account</Tabs.Trigger>
             <Tabs.Trigger value="colleagues">Colleagues</Tabs.Trigger>
             <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+            <Tabs.Trigger value="followers">followers</Tabs.Trigger>
+            <Tabs.Trigger value="following">followers</Tabs.Trigger>
           </Tabs.List>
 
           <Box px="4" pt="3" pb="2">
@@ -225,7 +235,65 @@ const User = () => {
                 <Table.Root className="w-[550px]">
                   <Table.Body size="3">
                     {user &&
-                      user.mySavedTickets.map((ticket) => (
+                      user.Ticket.length > 0 &&
+                      user.Ticket.map((ticket) => (
+                        <Table.Row key={ticket.id}>
+                          <Table.RowHeaderCell>
+                            <div className="flex flex-col  space-y-4">
+                              <Link to={`/tickets/${ticket.id}`}>
+                                <Text size="3" weight="regular">
+                                  {ticket.name || "title"}
+                                </Text>
+                              </Link>
+                              <Badge size="1" color="red" className="w-[50px]">
+                                {ticket.status}
+                              </Badge>
+                            </div>
+                          </Table.RowHeaderCell>
+                          <Table.Cell />
+                          <Table.Cell justify="end">
+                            <Avatar fallback="A" size="2" />
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                  </Table.Body>
+                </Table.Root>
+              </div>
+            </Tabs.Content>
+            <Tabs.Content value="following">
+              <div className="flow-root w-[600px] rounded-md relative top-0 right-60 p-5 border-2  ml-80 h-auto ">
+                <h5 className="text-xl font-bold  mb-5 leading-none text-gray-900 dark:text-white">
+                  Followers
+                </h5>
+                {followers &&
+                  followers.length > 0 &&
+                  followers.map((follower) => (
+                    <Card style={{ maxWidth: 240 }}>
+                      <Flex gap="3" align="center">
+                        <Avatar size="3" fallback="T" />
+                        <Box>
+                          <Text as="div" size="2" weight="bold">
+                            {follower.followedBy.name}
+                          </Text>
+                          <Text as="div" size="2" color="gray">
+                            {follower.followedBy.email}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    </Card>
+                  ))}
+              </div>
+            </Tabs.Content>
+            <Tabs.Content value="followers">
+              <div className="flow-root w-[600px] rounded-md relative top-0 right-60 p-5 border-2  ml-80 h-auto ">
+                <h5 className="text-xl font-bold  mb-5 leading-none text-gray-900 dark:text-white">
+                  Following
+                </h5>
+                <Table.Root className="w-[550px]">
+                  <Table.Body size="3">
+                    {following &&
+                      following.length > 0 &&
+                      following.map((ticket) => (
                         <Table.Row key={ticket.id}>
                           <Table.RowHeaderCell>
                             <div className="flex flex-col  space-y-4">
