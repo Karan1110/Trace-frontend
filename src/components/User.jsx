@@ -96,7 +96,7 @@ const User = () => {
             <Avatar fallback="A" size="6" className="mx-80 mt-5 mb-3" />
             <Heading>{user.name}</Heading>
             <Text>{user.email}</Text>
-            {user && (
+            {user && user.id !== localStorage.getItem("user_id") && (
               <Button
                 variant="solid"
                 mt="2"

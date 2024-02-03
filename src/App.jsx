@@ -11,7 +11,6 @@ import EmailVerificationForm from "./components/Mail"
 import Department from "./components/Department"
 import Tickets from "./components/Tickets.jsx"
 import SignUp from "./components/SignUp"
-import Profile from "./components/Profile"
 import Home from "./components/Home"
 import Meetings from "./components/Meetings"
 import TicketDetails from "./components/Ticket"
@@ -33,7 +32,6 @@ const App = () => {
             <Route path="/verify" element={<EmailVerificationForm />} />
             <Route path="/departments" element={<Department />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/profile" element={<Profile />} />
             <Route path="/" element={<Home />} />
             <Route path="/tickets/:id" element={<TicketDetails />} />
             <Route path="/edit/:id" element={<EditTicket />} />
