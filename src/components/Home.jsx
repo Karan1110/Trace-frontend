@@ -194,20 +194,24 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="mt-5">
+      <div className="mt-40">
         <Tabs.Root defaultValue="account">
           <Tabs.List>
             <Tabs.Trigger value="account">Feed</Tabs.Trigger>
             <Tabs.Trigger value="documents">Pending</Tabs.Trigger>
             <Tabs.Trigger value="settings">Department</Tabs.Trigger>
-            <Tabs.Trigger value="following">following</Tabs.Trigger>
+            <Tabs.Trigger value="following">Following</Tabs.Trigger>
           </Tabs.List>
 
           <Box px="4" pt="3" pb="2">
             <Tabs.Content value="account">
-              {feed.map((ticket) => {
-                return (
-                  <Card size="2" style={{ width: 425 }}>
+              <div className="flex flex-col justify-center items-center max-w-xl">
+                {feed.map((ticket) => (
+                  <Card
+                    key={ticket.id}
+                    size="2"
+                    style={{ width: 425, marginBottom: 16 }}
+                  >
                     <Flex gap="4" align="center">
                       <Avatar
                         size="4"
@@ -225,8 +229,8 @@ const Home = () => {
                       </Box>
                     </Flex>
                   </Card>
-                )
-              })}
+                ))}
+              </div>
             </Tabs.Content>
 
             <Tabs.Content value="documents">
@@ -286,7 +290,7 @@ const Home = () => {
                 followFeed.map((ticket) => {
                   return (
                     <Card size="2" style={{ width: 425 }}>
-                      <Flex gap="4" align="center">
+                      <Flex gap="4" align="center" direction={"row"}>
                         <Avatar
                           size="4"
                           radius="full"

@@ -15,7 +15,7 @@ import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { toast } from "react-hot-toast"
 import Spinner from "./Spinner"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false)
@@ -32,7 +32,7 @@ const Navbar = () => {
       })
 
       console.log(response.data)
-      setUsers(response.data.user)
+      setUsers(response.data)
     } catch (error) {
       toast(error.message)
       console.error(error)
@@ -50,7 +50,7 @@ const Navbar = () => {
         }
       )
       console.log(response.data)
-      setUser(response.data)
+      setUser(response.data.user)
     }
     fetchUser()
   }, [])
@@ -171,8 +171,6 @@ const Navbar = () => {
                       </React.Fragment>
                     ))}
                 </Flex>
-
-                {!users && <Spinner />}
               </Popover.Content>
             </Popover.Root>
           </div>
@@ -249,19 +247,24 @@ const Navbar = () => {
                   <Box grow="1">
                     <Flex gap="2" direction="column" justify="between">
                       {user && (
-                        <Text weight="regular" size="2">
-                          {user.email}
-                        </Text>
+                        <>
+                          <Text weight="regular" size="2">
+                            {user.name}
+                          </Text>
+                          <Text weight="regular" size="2">
+                            {user.email}
+                          </Text>
+                        </>
                       )}
+                      <a href={`/users/${localStorage.getItem("user_id")}`}>
+                        <Button size="1" className="w-full" color="purple">
+                          View more
+                        </Button>
+                      </a>
                       <Popover.Close>
                         <Button size="1" color="purple">
                           Log out
                         </Button>
-                        <Link to={`/users/${localStorage.getItem("user_id")}`}>
-                          <Button size="1" color="purple">
-                            View more
-                          </Button>
-                        </Link>
                       </Popover.Close>
                     </Flex>
                   </Box>

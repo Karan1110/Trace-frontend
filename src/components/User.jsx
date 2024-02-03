@@ -96,7 +96,7 @@ const User = () => {
             <Avatar fallback="A" size="6" className="mx-80 mt-5 mb-3" />
             <Heading>{user.name}</Heading>
             <Text>{user.email}</Text>
-            {user && user.id !== localStorage.getItem("user_id") && (
+            {user && user.id != localStorage.getItem("user_id") && (
               <Button
                 variant="solid"
                 mt="2"
@@ -115,6 +115,9 @@ const User = () => {
                   : "follow"}
               </Button>
             )}
+            <Button size="2" color="purple" className="w-1/2 my-5">
+              Block
+            </Button>
           </div>
         )}
         {user && (
@@ -293,25 +296,20 @@ const User = () => {
                   <Table.Body size="3">
                     {following &&
                       following.length > 0 &&
-                      following.map((ticket) => (
-                        <Table.Row key={ticket.id}>
-                          <Table.RowHeaderCell>
-                            <div className="flex flex-col  space-y-4">
-                              <Link to={`/tickets/${ticket.id}`}>
-                                <Text size="3" weight="regular">
-                                  {ticket.name || "title"}
-                                </Text>
-                              </Link>
-                              <Badge size="1" color="red" className="w-[50px]">
-                                {ticket.status}
-                              </Badge>
-                            </div>
-                          </Table.RowHeaderCell>
-                          <Table.Cell />
-                          <Table.Cell justify="end">
-                            <Avatar fallback="A" size="2" />
-                          </Table.Cell>
-                        </Table.Row>
+                      following.map((follower) => (
+                        <Card style={{ maxWidth: 240 }}>
+                          <Flex gap="3" align="center">
+                            <Avatar size="3" fallback="T" />
+                            <Box>
+                              <Text as="div" size="2" weight="bold">
+                                {follower.following.name}
+                              </Text>
+                              <Text as="div" size="2" color="gray">
+                                {follower.following.email}
+                              </Text>
+                            </Box>
+                          </Flex>
+                        </Card>
                       ))}
                   </Table.Body>
                 </Table.Root>
