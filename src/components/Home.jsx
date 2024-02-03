@@ -160,12 +160,12 @@ const Home = () => {
         </div>
 
         <div className=" absolute my-5 right-20 max-w-md p-4 bg-white sm:p-8 dark:bg-gray-800 ">
-          <div className="flow-root w-[600px] rounded-md relative top-0 right-60 p-5 border-2 h-auto ">
+          <div className="flow-root w-[450px] rounded-md relative top-0 right-10 p-5 border-2 h-auto ">
             <ScrollArea>
               <h5 className="text-xl font-bold  mb-5 leading-none text-gray-900 dark:text-white">
                 Latest Issues
               </h5>
-              <Table.Root className="w-[550px]">
+              <Table.Root className="w-[400px]">
                 <Table.Body size="3">
                   {tickets &&
                     tickets.map((ticket) => (
@@ -194,7 +194,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="my-5">
+      <div className="mt-5">
         <Tabs.Root defaultValue="account">
           <Tabs.List>
             <Tabs.Trigger value="account">Feed</Tabs.Trigger>

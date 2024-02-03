@@ -15,6 +15,7 @@ import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { toast } from "react-hot-toast"
 import Spinner from "./Spinner"
+import { Link } from "react-router-dom"
 
 const Navbar = () => {
   const [showNotifications, setShowNotifications] = useState(false)
@@ -256,6 +257,11 @@ const Navbar = () => {
                         <Button size="1" color="purple">
                           Log out
                         </Button>
+                        <Link to={`/users/${localStorage.getItem("user_id")}`}>
+                          <Button size="1" color="purple">
+                            View more
+                          </Button>
+                        </Link>
                       </Popover.Close>
                     </Flex>
                   </Box>
