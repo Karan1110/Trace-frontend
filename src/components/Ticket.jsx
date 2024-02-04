@@ -95,6 +95,31 @@ const Ticket = () => {
     })
   }
 
+  async function close() {
+    try {
+      // Make a PUT request to the API endpoint
+      const response = await axios.put(
+        `http://localhost:1111/tickets/close/${id}`,
+        null,
+        {
+          headers: {
+            "x-auth-token": localStorage.getItem("token"), // Include your authentication token if needed
+          },
+        }
+      )
+
+      // Check the response status and handle accordingly
+      if (response.status === 200) {
+        toast.success("closed!")
+      } else {
+        toast.error("something failed...")
+      }
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error("Error in API call:", error.message, error.response?.data)
+    }
+  }
+
   const handleAssign = async (userId) => {
     try {
       await axios.put(
@@ -164,7 +189,9 @@ const Ticket = () => {
               </Select.Content>
             </Select.Root>
           )}
-
+          <Button variant="solid" color="purple" onClick={() => close()}>
+            Close <Pencil2Icon />
+          </Button>
           <Button variant="solid" color="purple">
             Edit <Pencil2Icon />
           </Button>
