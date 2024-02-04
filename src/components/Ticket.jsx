@@ -168,7 +168,7 @@ const Ticket = () => {
         )}
 
         {!ticket && <Spinner />}
-        <div className="absolute right-60 w-[200px] ml-20  flex flex-col space-y-5">
+        <div className="absolute right-20 w-[200px] ml-20  flex flex-col space-y-5">
           {ticket && (
             <Select.Root
               defaultValue={ticket.user_id}
